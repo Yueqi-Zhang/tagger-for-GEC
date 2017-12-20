@@ -154,8 +154,8 @@ def convert_plain_to_json(name, vocabs, output_name, output_dir, num_shards,
             features, labels = line.strip().split("|||")
             features = features.strip().split(" ")
             labels = labels.strip().split(" ")
-            pred_pos = features[0]
-            inputs = features[1:]
+            #pred_pos = features[0]
+            inputs = features[0:]
 
             if lower:
                 inputs = [item.lower() for item in inputs]
@@ -163,12 +163,12 @@ def convert_plain_to_json(name, vocabs, output_name, output_dir, num_shards,
             inputs = [vocab_token[item] if item in vocab_token else unk
                       for item in inputs]
             labels = [vocab_label[item] for item in labels]
-            preds = [0 for _ in inputs]
-            preds[int(pred_pos)] = 1
+            #preds = [0 for _ in inputs]
+            #preds[int(pred_pos)] = 1
 
             feature = {
                 "inputs": inputs,
-                "preds": preds,
+                #"preds": preds,
                 "targets": labels
             }
             records.append(feature)
@@ -213,8 +213,8 @@ def convert_plain_to_record(name, vocabs, output_name, output_dir, num_shards,
             features, labels = line.strip().split("|||")
             features = features.strip().split()
             labels = labels.strip().split()
-            pred_pos = features[0]
-            inputs = features[1:]
+            #pred_pos = features[0]
+            inputs = features[0:]
 
             if lower:
                 inputs = [item.lower() for item in inputs]
@@ -222,12 +222,12 @@ def convert_plain_to_record(name, vocabs, output_name, output_dir, num_shards,
             inputs = [vocab_token[item] if item in vocab_token else unk
                       for item in inputs]
             labels = [vocab_label[item] for item in labels]
-            preds = [0 for _ in inputs]
-            preds[int(pred_pos)] = 1
+            #preds = [0 for _ in inputs]
+            #preds[int(pred_pos)] = 1
 
             feature = {
                 "inputs": inputs,
-                "preds": preds,
+                #"preds": preds,
                 "targets": labels
             }
             records.append(feature)

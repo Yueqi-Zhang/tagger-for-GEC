@@ -26,12 +26,12 @@ where `LIMIT` specifies the vocabulary size. This command will create two vocabu
 ### Convert data format
 The plain text must be converted to tf.Record format first using `input_convert.py.`.
 ```
-python tagger/scripts/input_converter.py --input_path TRAIN_FILE \
-                                         --output_name NAME      \
-                                         --output_dir OUTPUT_DIR \
-                                         --vocab WORD_DICT LABEL_DICT \
-                                         --num_shards NUM_SHARDS \
-                                         --shuffle --lower
+python Tagger/scripts/input_converter.py --input_path Tagger/fce-error-detection/tsv/fce_input\
+                                         --output_name fce_input_tf      \
+                                         --output_dir Tagger/fce-error-detection/tsv\
+                                         --vocab Tagger/fce-error-detection/tsv/vocab.txt Tagger/fce-error-detection/tsv/label.txt \
+                                         --num_shards 1 \
+                                        
 ```
 The above command will create `NUM_SHARDS` files with pattern `NAME-*-of-*` in the `OUTPUT_DIR`.
 
@@ -44,14 +44,14 @@ Once you finished the procedures described above, you can start the training sta
     Here's the validation script we used to train an FFN model on the CoNLL-2005 dataset.
     Please make sure that the validation script can run properly.
 ```
-SRLPATH=/PATH/TO/SRLCONLL
-TAGGERPATH=/PATH/TO/TAGGER
-DATAPATH=/PATH/TO/DATA
+SRLPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv
+TAGGERPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger
+DATAPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv
 
-export PERL5LIB="$SRLPATH/lib:$PERL5LIB"
-export PATH="$SRLPATH/bin:$PATH"
+export PERL5LIB="/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/lib:$PERL5LIB"
+export PATH="/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/bin:$PATH"
 
-python $TAGGERPATH/main.py predict --data_path $DATAPATH/conll05.devel.txt \
+python $TAGGERPATH/main.py predict --data_path /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/fce_dev \
   --model_dir train  --model_name deepatt \
   --vocab_path $DATAPATH/word_dict $DATAPATH/label_dict \
   --device_list 0 \
@@ -65,8 +65,8 @@ perl $SRLPATH/bin/srl-eval.pl $DATAPATH/conll05.devel.props.* output
     The command below is what we used to train an model on the CoNLL-2005 dataset.
 ```
 python tagger/main.py train \
-    --data_path TRAIN_PATH --model_dir train --model_name deepatt \
-    --vocab_path word_dict label_dict --emb_path glove.6B.100d.txt \
+    --data_path /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv --model_dir train --model_name deepatt \
+    --vocab_path /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/vocab.txt /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/label.txt --emb_path glove.6B.100d.txt \
     --model_params=feature_size=100,hidden_size=200,filter_size=800,residual_dropout=0.2, \
                    num_hidden_layers=10,attention_dropout=0.1,relu_dropout=0.1 \
     --training_params=batch_size=4096,eval_batch_size=1024,optimizer=Adadelta,initializer=orthogonal, \

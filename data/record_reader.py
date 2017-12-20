@@ -15,13 +15,13 @@ def input_pipeline(file_pattern, mode, capacity=64):
 
     keys_to_features = {
         "inputs": tf.VarLenFeature(tf.int64),
-        "preds": tf.VarLenFeature(tf.int64),
+        #"preds": tf.VarLenFeature(tf.int64),
         "targets": tf.VarLenFeature(tf.int64)
     }
 
     items_to_handlers = {
         "inputs": tfexample_decoder.Tensor("inputs"),
-        "preds": tfexample_decoder.Tensor("preds"),
+        #"preds": tfexample_decoder.Tensor("preds"),
         "targets": tfexample_decoder.Tensor("targets")
     }
 
@@ -132,8 +132,8 @@ def get_input_fn(file_patterns, mode, params):
 
         # Final feature map.
         features = {
-            "inputs": feature_map["inputs"],
-            "preds": feature_map["preds"]
+            "inputs": feature_map["inputs"]
+            #"preds": feature_map["preds"]
         }
 
         targets = feature_map["targets"]

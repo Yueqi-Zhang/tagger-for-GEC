@@ -731,11 +731,11 @@ def ensemble(args):
 
     # build graph
     inputs = tf.placeholder(tf.int32, [None, None], "inputs")
-    preds = tf.placeholder(tf.int32, [None, None], "preds")
+    #preds = tf.placeholder(tf.int32, [None, None], "preds")
     embedding = tf.placeholder(tf.float32, [None, None, None], "embedding")
     mask = tf.placeholder(tf.float32, [None, None], "mask")
 
-    features = {"inputs": inputs, "preds": preds}
+    features = {"inputs": inputs}#, "preds": preds}
 
     if emb is not None:
         features["embedding"] = embedding
@@ -799,8 +799,8 @@ def ensemble(args):
             outputs = []
             for features in input_fn:
                 feed_dict = {
-                    inputs: features["inputs"],
-                    preds: features["preds"]
+                    inputs: features["inputs"]
+                    #preds: features["preds"]
                 }
 
                 if args.emb_path:

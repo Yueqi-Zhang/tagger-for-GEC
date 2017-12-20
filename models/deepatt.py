@@ -189,7 +189,7 @@ def deepatt_model(features, mode, params):
     feature_size = params.feature_size
 
     tok_seq = features["inputs"]
-    pred_seq = features["preds"]
+    #pred_seq = features["preds"]
     mask = tf.to_float(tf.not_equal(tok_seq, 0))
 
     # shared embedding and softmax weights
@@ -200,8 +200,8 @@ def deepatt_model(features, mode, params):
             initializer = tf.random_normal_initializer(0.0,
                                                        feature_size ** -0.5)
 
-    weights = tf.get_variable("weights", [2, feature_size],
-                              initializer=initializer)
+    #weights = tf.get_variable("weights", [2, feature_size],
+                              #initializer=initializer)
 
     if mode == tf.contrib.learn.ModeKeys.TRAIN:
         if params.embedding is not None:
@@ -225,8 +225,8 @@ def deepatt_model(features, mode, params):
             unk_emb = features["embedding"]
             inputs = inputs * keep_mask + (1.0 - keep_mask) * unk_emb
 
-    preds = tf.gather(weights, pred_seq)
-    inputs = tf.concat([inputs, preds], -1)
+    #preds = tf.gather(weights, pred_seq)
+    #inputs = tf.concat([inputs, preds], -1)
 
     if params.multiply_embedding_mode == "sqrt_depth":
         inputs = inputs * (hidden_size ** 0.5)
