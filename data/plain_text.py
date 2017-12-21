@@ -47,24 +47,24 @@ def _decode_batch_input_fn(num_decode_batches, sorted_inputs,
                 batch_length = len(outputs[0])
 
         final_batch_inputs = []
-        final_batch_preds = []
+        #final_batch_preds = []
         final_batch_emb = []
         final_batch_mask = []
 
         # pad zeros
         for item in batch_inputs:
-            if len(item) == 2:
-                input_ids, pred_id = item
+            if len(item) == 1:
+                input_ids = item #input_ids, pred_id = item
                 emb, mask = None, None
             else:
-                input_ids, pred_id, emb, mask = item
+                input_ids, emb, mask = item#, pred_id
 
             assert len(input_ids) <= batch_length
             x = input_ids + [0] * (batch_length - len(input_ids))
-            y = [0 for _ in x]
-            y[pred_id] = 1
+            #y = [0 for _ in x]
+            #y[pred_id] = 1
             final_batch_inputs.append(x)
-            final_batch_preds.append(y)
+            #final_batch_preds.append(y)
 
             if emb is not None:
                 dim = emb.shape[1]
@@ -78,13 +78,13 @@ def _decode_batch_input_fn(num_decode_batches, sorted_inputs,
 
         if not final_batch_emb:
             features = {
-                "inputs": np.array(final_batch_inputs),
-                "preds": np.array(final_batch_preds)
+                "inputs": np.array(final_batch_inputs)
+                #"preds": np.array(final_batch_preds)
             }
         else:
             features = {
                 "inputs": np.array(final_batch_inputs),
-                "preds": np.array(final_batch_preds),
+                #"preds": np.array(final_batch_preds),
                 "embedding": np.array(final_batch_emb),
                 "mask": np.array(final_batch_mask)
             }
@@ -144,16 +144,16 @@ def load_glove_embedding(filename, vocab):
 def convert_text(text, vocab, params):
     words = text.strip().split()
     unk = vocab["<unk>"]
-    tokens = [word.lower() for word in words[1:]]
+    tokens = [word.lower() for word in words[0:]]
     ids = [vocab[word] if word in vocab else unk for word in tokens]
 
-    if params.embedding is None:
-        return ids, int(words[0])
+    #if params.embedding is None:
+        #return ids, int(words[0])
 
     keep_mask = []
-    emb = np.zeros([len(words[1:]), params.feature_size])
+    emb = np.zeros([len(words[0:]), params.feature_size])
 
-    for i, word in enumerate(words[1:]):
+    for i, word in enumerate(words[0:]):
         if word in params.embedding:
             emb[i] = params.embedding[word]
 
@@ -164,7 +164,7 @@ def convert_text(text, vocab, params):
             # keep
             keep_mask.append(1)
 
-    return ids, int(words[0]), emb, keep_mask
+    return ids, emb, keep_mask #, int(words[0])
 
 
 def get_sorted_input_fn(filename, vocab, batch_size, params):

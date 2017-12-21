@@ -178,7 +178,7 @@ def training_params():
         warmup_steps=4000,
         train_steps=250000,
         eval_steps=10,
-        min_eval_frequency=2000,
+        min_eval_frequency=5,
         keep_checkpoint_max=20,
         batching_scheme="token",
         learning_rate_decay="noam",

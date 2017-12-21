@@ -23,7 +23,8 @@ def calculate_fmeasure(predictions, labels):
     precision = calculate_precision(predictions, labels)
     recall = calculate_recall(predictions, labels)
 
-    return 2 * precision * recall / (precision + recall)
+    #return 2 * precision * recall / (precision + recall)
+    return (1 + 0.5**2)*precision*recall/(0.5**2*precision + recall)
 
 
 def precision_metric_fn(predictions, labels, weights=None):

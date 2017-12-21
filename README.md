@@ -44,21 +44,40 @@ Once you finished the procedures described above, you can start the training sta
     Here's the validation script we used to train an FFN model on the CoNLL-2005 dataset.
     Please make sure that the validation script can run properly.
 ```
-SRLPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv
+SRLPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_datdaset/tsv
 TAGGERPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger
-DATAPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv
+DATAPATH=/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv
 
-export PERL5LIB="/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/lib:$PERL5LIB"
-export PATH="/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/bin:$PATH"
+export PERL5LIB="/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/lib:$PERL5LIB"
+export PATH="/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/bin:$PATH"
 
-python $TAGGERPATH/main.py predict --data_path /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/fce-error-detection/tsv/fce_dev \
+python /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/main.py predict --data_path /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/fce_dev \
   --model_dir train  --model_name deepatt \
-  --vocab_path $DATAPATH/word_dict $DATAPATH/label_dict \
+  --vocab_path /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/vocab.txt /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/label.txt \
   --device_list 0 \
   --decoding_params="decode_batch_size=512" \
-  --model_params="num_hidden_layers=10,feature_size=100,hidden_size=200,filter_size=800"
+  --model_params="num_hidden_layers=10,feature_size=200,hidden_size=200,filter_size=800"
 python $TAGGERPATH/scripts/convert_to_conll.py conll05.devel.txt.deepatt.decodes $DATAPATH/conll05.devel.props.gold.txt output
 perl $SRLPATH/bin/srl-eval.pl $DATAPATH/conll05.devel.props.* output
+
+
+
+predict
+--data_path
+/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/fce_dev
+--model_dir
+train
+--model_name
+deepatt
+--vocab_path
+/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/vocab.txt
+/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/label.txt
+--device_list
+0
+--decoding_params="decode_batch_size=512"
+--model_params="num_hidden_layers=10,feature_size=200,hidden_size=200,filter_size=800"
+--emb_path
+/Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/glove/glove.6B.200d.txt
 ```
 * Training command
 
@@ -73,6 +92,26 @@ python tagger/main.py train \
                       use_global_initializer=false,initializer_gain=1.0,train_steps=600000, \
                       learning_rate_decay=piecewise_constant,learning_rate_values=[1.0,0.5,0.25], \
                       learning_rate_boundaries=[400000,500000],device_list=[0],clip_grad_norm=1.0 \ 
+    --validation_params=script=run.sh
+    
+    
+    
+    
+    
+    train
+    --data_path
+    /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tfrecord/
+    --model_dir
+    train
+    --model_name
+    deepatt
+    --vocab_path
+    /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/vocab.txt
+    /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/tsv/label.txt
+    --emb_path
+    /Users/yueqizhang/Documents/THUNLP-Intern/errant/Tagger/Tagger/ed_dataset/glove/glove.6B.200d.txt
+    --model_params=feature_size=200,hidden_size=200,filter_size=800,residual_dropout=0.2,num_hidden_layers=10,attention_dropout=0.1,relu_dropout=0.1
+    --training_params=batch_size=4096,eval_batch_size=1024,optimizer=Adadelta,initializer=orthogonal,use_global_initializer=false,initializer_gain=1.0,train_steps=600000,learning_rate_decay=piecewise_constant,learning_rate_values=[1.0,0.5,0.25],learning_rate_boundaries=[400000,500000],device_list=[0],clip_grad_norm=1.0
     --validation_params=script=run.sh
 ```
 
